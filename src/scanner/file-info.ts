@@ -1,4 +1,3 @@
-
 import fs from 'fs/promises';
 import { fileTypeFromFile } from 'file-type';
 import path from 'path';
@@ -27,11 +26,12 @@ export async function getFileInfo(filePath: string): Promise<FileInfo> {
   
   let category: FileCategory = 'unknown';
   let mimeType = 'application/octet-stream';
-  let extension = path.extname(filePath).slice(1);
+  const originalExtension = path.extname(filePath).slice(1).toLowerCase();
+  let detectedExtension = originalExtension;
 
   if (type) {
     mimeType = type.mime;
-    extension = type.ext;
+    detectedExtension = type.ext;
     if (PHOTO_MIMES.includes(type.mime)) {
       category = 'photo';
     } else if (VIDEO_MIMES.includes(type.mime)) {
@@ -39,11 +39,17 @@ export async function getFileInfo(filePath: string): Promise<FileInfo> {
     }
   }
 
+  const isMismatch = type ? originalExtension !== type.ext.toLowerCase() && 
+                    !(originalExtension === 'jpeg' && type.ext === 'jpg') &&
+                    !(originalExtension === 'jpg' && type.ext === 'jpeg') : false;
+
   return {
     path: filePath,
-    extension,
+    originalExtension,
+    detectedExtension,
     mimeType,
     category,
     size: stats.size,
+    isMismatch,
   };
 }

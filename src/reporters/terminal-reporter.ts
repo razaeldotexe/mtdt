@@ -8,7 +8,14 @@ export function reportScan(report: MetadataReport) {
   console.log(`📊 LAPORAN SCAN METADATA`);
   console.log(`====================================================`);
   console.log(`📁 File      : ${fileInfo.path}`);
-  console.log(`FileType  : ${fileInfo.mimeType} (${fileInfo.extension.toUpperCase()})`);
+  console.log(`Format Asli: .${fileInfo.originalExtension.toUpperCase()}`);
+  console.log(`Isi Deteksi: ${fileInfo.mimeType} (.${fileInfo.detectedExtension.toUpperCase()})`);
+  
+  if (fileInfo.isMismatch) {
+    console.log(`⚠️  PERINGATAN: Ekstensi file tidak sesuai dengan isinya!`);
+    console.log(`    (File bernama .${fileInfo.originalExtension.toUpperCase()} tapi sebenarnya adalah .${fileInfo.detectedExtension.toUpperCase()})`);
+  }
+
   console.log(`Ukuran    : ${(fileInfo.size / 1024).toFixed(2)} KB`);
   console.log(`Kategori  : ${fileInfo.category}`);
   console.log(`----------------------------------------------------`);

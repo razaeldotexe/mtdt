@@ -3,10 +3,12 @@ export type FileCategory = 'photo' | 'video' | 'unknown';
 
 export interface FileInfo {
   path: string;
-  extension: string;
+  originalExtension: string;
+  detectedExtension: string;
   mimeType: string;
   category: FileCategory;
   size: number;
+  isMismatch: boolean;
 }
 
 export interface MetadataReport {
