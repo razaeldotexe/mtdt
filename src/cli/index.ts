@@ -10,9 +10,17 @@ import { CleaningOptions } from '../types/index.js';
 const program = new Command();
 
 program
-  .name('metadata-cleaner')
-  .description('A tool to remove unnecessary metadata from photos and videos')
-  .version('1.0.0');
+  .name('mtdt')
+  .description('Alat untuk menghapus metadata yang tidak penting dari foto dan video')
+  .version('1.0.0')
+  .helpOption('-h, --help', 'Menampilkan panduan penggunaan');
+
+program
+  .command('help')
+  .description('Menampilkan panduan penggunaan')
+  .action(() => {
+    program.help();
+  });
 
 program
   .command('scan <input>')

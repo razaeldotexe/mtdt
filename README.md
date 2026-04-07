@@ -63,7 +63,8 @@ Agar bisa dipanggil langsung dari mana saja:
 npm run build
 npm link
 # Sekarang Anda bisa mengetik:
-metadata-cleaner scan foto.jpg
+mtdt scan foto.jpg
+mtdt help
 ```
 
 ## Lisensi

@@ -34,6 +34,6 @@
     "vitest": "^4.1.3"
   },
   "bin": {
-    "metadata-cleaner": "./dist/src/cli/index.js"
+    "mtdt": "./dist/src/cli/index.js"
   }
 }
