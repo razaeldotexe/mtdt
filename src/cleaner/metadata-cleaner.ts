@@ -52,29 +52,53 @@ export async function cleanMetadata(filePath: string, options: CleaningOptions):
 async function cleanPhoto(input: string, output: string, options: CleaningOptions) {
   const writeArgs: string[] = [];
 
+  // Kita gunakan pendekatan menghapus SEMUA (-all=) jika removeAllMetadata aktif
+  // Atau menghapus grup besar dan tag spesifik yang sering tertinggal
   if (options.removeAllMetadata) {
-    // -all= deletes all metadata. -all:all= is more aggressive
     writeArgs.push('-all=');
+    writeArgs.push('-CommonArgs'); // Memastikan argumen sistem ikut bersih
   } else {
-    // Default: remove standard non-essential tags
+    // Default: hapus grup utama
     writeArgs.push('-EXIF=');
     writeArgs.push('-IPTC=');
     writeArgs.push('-XMP=');
+    
+    // Hapus tag spesifik yang sering lolos dari grup utama
+    writeArgs.push('-Copyright=');
+    writeArgs.push('-CopyrightNotice=');
+    writeArgs.push('-Rights=');
+    writeArgs.push('-Credit=');
+    writeArgs.push('-Artist=');
+    writeArgs.push('-Creator=');
+    writeArgs.push('-AuthorsPosition=');
+    writeArgs.push('-By-line=');
+    writeArgs.push('-Caption-Abstract=');
+    writeArgs.push('-ProfileCopyright='); // Copyright di dalam ICC Profile
+    
     writeArgs.push('-ThumbnailImage=');
     writeArgs.push('-PreviewImage=');
-    writeArgs.push('-JpgFromRaw=');
     
     if (!options.keepBasicInfo) {
       writeArgs.push('-MakerNotes=');
       writeArgs.push('-Comment=');
+      writeArgs.push('-Adobe='); // Metadata spesifik Adobe
     }
   }
 
-  // -overwrite_original if input and output are same or if we want to replace
-  // But here we handle output path explicitly
-  await exiftool.write(input, Object.fromEntries(writeArgs.map(arg => [arg.replace(/^-|=$/g, ''), null])), [
-    '-o', output
-  ]);
+  // Gunakan -all= secara eksplisit di argumen tambahan untuk hasil maksimal
+  const extraArgs = ['-o', output];
+  if (options.removeAllMetadata) {
+    extraArgs.push('-all=');
+  }
+
+  // Menyiapkan object tags untuk exiftool-vendored
+  const tagsToDelete = Object.fromEntries(
+    writeArgs
+      .filter(arg => arg.startsWith('-') && arg.endsWith('='))
+      .map(arg => [arg.replace(/^-|=$/g, ''), null])
+  );
+
+  await exiftool.write(input, tagsToDelete, extraArgs);
 }
 
 async function cleanVideo(input: string, output: string, options: CleaningOptions) {

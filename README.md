@@ -5,7 +5,7 @@ Alat CLI (Command Line Interface) yang kuat untuk menghapus metadata yang tidak 
 ## Fitur Utama
 - **Pembersihan Tanpa Hilang Kualitas (Lossless)**: Menghapus metadata tanpa melakukan pengkodean ulang (re-encoding) sehingga kualitas visual/audio tetap terjaga.
 - **Dukungan Format Luas**: Mendukung format foto populer (JPG, PNG, WebP, HEIC, TIFF) dan video (MP4, MOV, MKV, WebM).
-- **Fokus Privasi**: Menghapus EXIF, IPTC, XMP, geotag (lokasi), informasi pembuat, identitas perangkat lunak, dan banyak lagi.
+- **Fokus Privasi**: Menghapus EXIF, IPTC, XMP, geotag (lokasi), informasi pembuat, hak cipta (copyright), kredit (credit), identitas perangkat lunak, dan banyak lagi.
 - **Deteksi Metadata AI**: Mampu mendeteksi dan menghapus metadata berbasis AI/provenance (seperti C2PA) jika tersimpan dalam tag standar.
 - **Proses Batch**: Bersihkan seluruh isi folder sekaligus dengan satu perintah.
 - **Mode Uji Coba (Dry-Run)**: Lihat apa yang akan dihapus tanpa benar-benar mengubah file asli.
