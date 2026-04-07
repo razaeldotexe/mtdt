@@ -2,24 +2,39 @@
 import { MetadataReport, CleaningResult } from '../types/index.js';
 
 export function reportScan(report: MetadataReport) {
-  console.log(`\n--- Scan Report: ${report.filePath} ---`);
-  console.log(`File Type: ${report.fileInfo.mimeType} (${report.fileInfo.category})`);
-  console.log(`Size: ${(report.fileInfo.size / 1024).toFixed(2)} KB`);
+  const { fileInfo, summary, rawMetadata } = report;
   
-  console.log('\nMetadata Detected:');
-  const summary = report.summary;
-  const status = (found?: boolean) => found ? '✅ Found' : '❌ Not Found';
+  console.log(`\n====================================================`);
+  console.log(`📊 LAPORAN SCAN METADATA`);
+  console.log(`====================================================`);
+  console.log(`📁 File      : ${fileInfo.path}`);
+  console.log(`FileType  : ${fileInfo.mimeType} (${fileInfo.extension.toUpperCase()})`);
+  console.log(`Ukuran    : ${(fileInfo.size / 1024).toFixed(2)} KB`);
+  console.log(`Kategori  : ${fileInfo.category}`);
+  console.log(`----------------------------------------------------`);
+
+  const status = (found?: boolean) => found ? '✅ TERDETEKSI' : '❌ BERSIH';
   
-  console.log(`  EXIF:       ${status(summary.exif)}`);
-  console.log(`  IPTC:       ${status(summary.iptc)}`);
-  console.log(`  XMP:        ${status(summary.xmp)}`);
-  console.log(`  Geotags:    ${status(summary.geotag)}`);
-  console.log(`  Author:     ${status(summary.author)}`);
-  console.log(`  Software:   ${status(summary.software)}`);
-  console.log(`  Timestamp:  ${status(summary.timestamp)}`);
-  console.log(`  Thumbnail:  ${status(summary.thumbnail)}`);
-  console.log(`  AI/C2PA:    ${status(summary.aiMetadata)}`);
-  console.log('------------------------------------\n');
+  console.log(`🔍 STATUS RINGKAS:`);
+  console.log(`  - EXIF Data        : ${status(summary.exif)}`);
+  console.log(`  - IPTC Data        : ${status(summary.iptc)}`);
+  console.log(`  - XMP Data         : ${status(summary.xmp)}`);
+  console.log(`  - Lokasi (GPS)     : ${status(summary.geotag)}`);
+  console.log(`  - Metadata AI/C2PA : ${status(summary.aiMetadata)}`);
+  console.log(`  - Thumbnail        : ${status(summary.thumbnail)}`);
+  
+  console.log(`\n👤 INFORMASI KEPEMILIKAN & IDENTITAS:`);
+  console.log(`  - Hak Cipta (Copyright) : ${status(summary.author || !!rawMetadata.Copyright || !!rawMetadata.ProfileCopyright)}`);
+  console.log(`  - Kredit (Credit)      : ${status(!!rawMetadata.Credit || !!rawMetadata.Byline)}`);
+  console.log(`  - Pembuat (Artist)     : ${status(!!rawMetadata.Artist || !!rawMetadata.Creator)}`);
+  console.log(`  - Software/Device      : ${status(summary.software)}`);
+  console.log(`  - Waktu (Timestamp)    : ${status(summary.timestamp)}`);
+
+  if (summary.aiMetadata) {
+    console.log(`\n⚠️  PERINGATAN: File ini mengandung metadata 'Content Credentials' (AI/Provenance).`);
+  }
+
+  console.log(`====================================================\n`);
 }
 
 export function reportCleanResult(result: CleaningResult) {
